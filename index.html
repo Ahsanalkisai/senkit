@@ -1,0 +1,839 @@
+<!doctype html>
+<html lang="dv" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="SENKit — a practical resource hub for SEN teachers.">
+<title>SENKit — SEN Teacher Toolkit</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thaana:wght@400;700&family=Amiri:wght@400;700&display=swap">
+<style>
+@font-face{font-family:"FarumaW";src:url("./assets/Faruma.woff2") format("woff2"),url("./assets/Faruma.woff") format("woff");font-style:normal;font-weight:400;font-display:swap}
+/* Layout: projector-first hub. Home = grid of 7 category tiles; tap a tile = that category's tools as cards with link buttons. RTL Dhivehi. */
+:root{
+  --bg:#F4F8F5; --card:#FFFFFF; --ink:#18262A; --muted:#5F7068; --line:#D5E6DA;
+  --green:#1F6F50; --green2:#E3F1E8; --navy:#1E2A44; --gold:#C9A227; --rose:#B85042; --rose2:#FBEFEC;
+  --shadow:0 4px 18px rgba(20,50,35,.08);
+  --dv:"FarumaW","Faruma","Noto Sans Thaana",sans-serif; --ar:"Amiri","Traditional Arabic",serif; --en:"Segoe UI",Calibri,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#101814; --card:#18231E; --ink:#EAF3EE; --muted:#9FB3A8; --line:#2A3D33; --green:#5BBF8C; --green2:#1C3227; --navy:#C9D6EE; --gold:#E8C35A; --rose:#E58A7C; --rose2:#3A221E; --shadow:0 4px 18px rgba(0,0,0,.35); color-scheme:dark } }
+:root[data-theme="dark"]{ --bg:#101814; --card:#18231E; --ink:#EAF3EE; --muted:#9FB3A8; --line:#2A3D33; --green:#5BBF8C; --green2:#1C3227; --navy:#C9D6EE; --gold:#E8C35A; --rose:#E58A7C; --rose2:#3A221E; --shadow:0 4px 18px rgba(0,0,0,.35); color-scheme:dark }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--dv);direction:rtl;font-size:18px;line-height:1.85;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
+a{color:inherit}
+.en{font-family:var(--en);direction:ltr;unicode-bidi:isolate}
+.wrap{max-width:1180px;margin:0 auto;padding-block:18px 40px;display:flex;flex-direction:column;gap:18px}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+header h1{margin:0;font-size:1.7rem;line-height:1.5;text-wrap:balance}
+header .sub{color:var(--muted);font-size:1rem}
+.btn{font-family:var(--dv);font-size:1rem;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:8px 16px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{border-color:var(--green)}
+.btn:focus-visible,.tile:focus-visible,.lk:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.rules{display:flex;gap:10px;flex-wrap:wrap}
+.rule{background:var(--green2);color:var(--green);border-radius:999px;padding:6px 14px;font-weight:700;font-size:.95rem}
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.tile{background:var(--card);border:2px solid transparent;border-radius:22px;box-shadow:var(--shadow);padding:20px;cursor:pointer;display:flex;flex-direction:column;gap:8px;text-align:right;font-family:var(--dv);color:var(--ink);font-size:1rem;transition:transform .12s,border-color .12s;min-width:0}
+.tile:hover{transform:translateY(-2px);border-color:var(--green)}
+.tile .ic{width:58px;height:58px;border-radius:16px;background:var(--green2);display:flex;align-items:center;justify-content:center;color:var(--green)}
+.tile .ic svg{width:32px;height:32px}
+.tile h2{margin:4px 0 0;font-size:1.25rem;line-height:1.5}
+.tile p{margin:0;color:var(--muted);font-size:.95rem;line-height:1.7}
+.tile .meta{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:6px}
+.cnt{font-family:var(--en);font-weight:700;color:var(--green);background:var(--green2);border-radius:999px;padding:2px 12px;font-size:.9rem}
+.livepill{background:var(--gold);color:#1E2A44;border-radius:999px;padding:2px 12px;font-size:.85rem;font-weight:700}
+/* category view */
+.cathead{background:var(--card);border-radius:22px;box-shadow:var(--shadow);padding:20px 22px;display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.cathead .ic{width:70px;height:70px;border-radius:18px;background:var(--green2);display:flex;align-items:center;justify-content:center;color:var(--green);flex-shrink:0}
+.cathead .ic svg{width:40px;height:40px}
+.cathead .tx{flex:1;min-width:240px}
+.cathead h2{margin:0;font-size:1.6rem;line-height:1.5}
+.cathead .why{color:var(--muted);margin:4px 0 0}
+.how{background:var(--green2);border-radius:16px;padding:12px 16px;margin-top:12px}
+.how b{color:var(--green)}
+.how ol{margin:6px 0 0;padding-right:22px}
+.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
+.item{background:var(--card);border-radius:20px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:8px;min-width:0;border:2px solid transparent}
+.item.live{border-color:var(--gold)}
+.item h3{margin:0;font-size:1.25rem;line-height:1.5;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.item h3 .ar{font-family:var(--ar);font-size:1.35rem}
+.item .what{margin:0}
+.feat{background:var(--green2);border-radius:12px;padding:8px 12px;font-size:.95rem}
+.feat b{color:var(--green)}
+.feat ul{list-style:none;margin:4px 0 0;padding:0}
+.feat li{padding:3px 12px 3px 0;border-right:3px solid var(--green);margin:4px 0}
+.item .sen b{color:var(--green)}
+.item .cost{color:var(--muted);font-size:.9rem}
+.links{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:4px}
+.lk{background:var(--green);color:#fff;border-radius:12px;padding:8px 14px;text-decoration:none;font-weight:700;font-size:.95rem;display:inline-flex;align-items:center;gap:6px;max-width:100%;overflow-wrap:anywhere}
+.lk.sec{background:transparent;color:var(--green);border:1.5px solid var(--green)}
+.lk svg{width:16px;height:16px;flex-shrink:0}
+.nav{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.pager{display:flex;gap:8px;flex-wrap:wrap}
+.pager button{font-family:var(--dv);border:0;background:var(--card);border-radius:999px;padding:6px 14px;cursor:pointer;color:var(--muted);font-size:.95rem;box-shadow:var(--shadow)}
+.pager button.on{background:var(--green);color:#fff}
+.avoid{background:var(--rose2);border-radius:18px;padding:14px 18px}
+.avoid b{color:var(--rose)}
+.foot{color:var(--muted);font-size:.85rem;text-align:center}
+[hidden]{display:none!important}
+/* demos */
+.demo{background:var(--card);border-radius:22px;box-shadow:var(--shadow);padding:18px 22px;border:2px solid var(--gold)}
+.demo>h3{margin:0 0 10px;font-size:1.3rem;display:flex;align-items:center;gap:10px}
+.demo>h3 .livepill{font-size:.85rem}
+.dctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.dctl label{display:flex;gap:6px;align-items:center;color:var(--muted)}
+.dctl select{font-family:var(--dv);font-size:1rem;border:1.5px solid var(--line);border-radius:10px;padding:4px 8px;background:var(--card);color:var(--ink)}
+.dbtn{font-family:var(--dv);font-size:1rem;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:7px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.dbtn.p{background:var(--green);border-color:var(--green);color:#fff;font-weight:700}
+.dbtn.big{font-size:1.2rem;padding:12px 22px}
+.dbtn.lt{font-family:var(--ar);font-size:1.6rem;padding:0 16px;min-width:56px;justify-content:center}
+.dbtn.lt.on{background:var(--green2);border-color:var(--green)}
+.ayah{font-family:var(--ar);font-size:clamp(34px,6vw,58px);line-height:2;text-align:center;background:var(--bg);border-radius:18px;padding:14px 10px;margin:8px 0;direction:rtl}
+.ayah .w{padding:0 .12em;border-radius:12px;transition:background .15s,color .15s}
+.ayah .w.on{background:var(--gold);color:#1E2A44}
+.ayah .w.tap{cursor:pointer}
+.ayah .w.flag{background:var(--rose2);color:var(--rose);box-shadow:inset 0 -4px 0 var(--rose)}
+.ayah .w.flag.on{background:var(--gold);color:#1E2A44}
+.ayah .sep{color:var(--muted);font-size:.6em}
+.tjx .tj{border-radius:6px}
+.tjx[data-show="all"] .m,.tjx[data-show="m"] .m{color:#D23A3A}
+.tjx[data-show="all"] .g,.tjx[data-show="g"] .g{color:#1F8F4E}
+.tjx[data-show="all"] .q,.tjx[data-show="q"] .q{color:#1F6FD2}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%}
+.dot.m{background:#D23A3A}.dot.g{background:#1F8F4E}.dot.q{background:#1F6FD2}
+.dstat{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted)}
+.dstat1{color:var(--green);font-weight:700;margin:6px 0}
+.dbar{height:14px;border-radius:999px;background:var(--green2);overflow:hidden;margin:6px 0}
+.dbar i{display:block;height:100%;width:0;background:#D8237A}
+.dnote{color:var(--muted);font-size:.95rem;margin:6px 0}
+.dnote .lk{padding:3px 10px;font-size:.88rem}
+.tracewrap{position:relative;width:min(80vw,340px);aspect-ratio:1;margin:8px auto;border-radius:20px;background:var(--bg);border:2px dashed var(--line);touch-action:none;max-width:100%}
+.tracewrap canvas{position:absolute;inset:0;width:100%;height:100%}
+.wheelrow{display:flex;gap:24px;align-items:center;flex-wrap:wrap;justify-content:center}
+.wheelbox{position:relative;width:min(78vw,340px);aspect-ratio:1;max-width:100%}
+.wheelbox canvas{width:100%;height:100%}
+.pin{position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:26px solid var(--ink);z-index:2}
+.wside{flex:1;min-width:240px;display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.wres{font-family:var(--ar);font-size:110px;line-height:1.2;min-height:132px}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+.vgrid h4{margin:0 0 8px;color:var(--green);font-size:1.1rem}
+.vsteps{display:flex;flex-direction:column;gap:8px}
+.vs{display:flex;align-items:center;gap:12px;background:var(--bg);border-radius:14px;padding:8px 12px;border:2px solid transparent}
+.vs .n{flex:0 0 34px;height:34px;border-radius:50%;background:var(--green2);color:var(--green);display:flex;align-items:center;justify-content:center;font-weight:700;font-family:var(--en)}
+.vs>div{flex:1}
+.vs .vt{font-weight:700;font-size:1.4rem;color:var(--green);min-width:48px;text-align:center}
+.vs.on{border-color:var(--gold);background:var(--card)}
+.vs.on .n{background:var(--gold);color:#1E2A44}
+.vs.done .n{background:var(--green);color:#fff}
+.ck{display:flex;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.ck input{width:20px;height:20px;accent-color:var(--green)}
+.aac{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ab{font-family:var(--dv);background:var(--bg);border:2px solid var(--line);border-radius:16px;padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:var(--ink);font-size:1rem}
+.ab svg{width:38px;height:38px;color:var(--green)}
+.ab .ar{font-family:var(--ar);color:var(--green)}
+.ab.on{border-color:var(--gold);background:var(--card)}
+.vtimer{position:relative;width:200px;height:200px;margin:6px auto}
+.vtimer svg{width:100%;height:100%;transform:rotate(-90deg)}
+.vtimer .bg{fill:none;stroke:var(--green2);stroke-width:14}
+.vtimer .fg{fill:none;stroke:#D23A3A;stroke-width:14;stroke-linecap:round;transition:stroke-dashoffset .9s linear}
+.vtt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.2rem;font-weight:700}
+.tile .meta .dpill{background:var(--green);color:#fff;border-radius:999px;padding:2px 12px;font-size:.85rem;font-weight:700}
+
+@media (max-width:520px){ body{font-size:16px} header h1{font-size:1.35rem} .items{grid-template-columns:1fr} .tiles{grid-template-columns:1fr 1fr} .tile{padding:14px} .tile p{display:none} }
+@media (prefers-reduced-motion: reduce){ *{transition:none!important} }
+.qframe{width:100%;height:520px;border:0;border-radius:16px;background:var(--bg)}
+.vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.vid{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:14px 16px;color:var(--ink);text-decoration:none;font-size:1.05rem;border:2px solid transparent}
+.vid:hover{border-color:var(--gold)}
+.vid .ig{width:36px;height:36px;border-radius:10px;background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF);color:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 36px}
+.vid .ig svg{width:22px;height:22px}
+.vid>svg{width:16px;height:16px;margin-right:auto;color:var(--muted)}
+.by{color:var(--green);font-weight:700;font-size:.95rem;margin-top:2px}
+h1,h2,h3,h4,b,strong{font-weight:normal}
+
+
+/* ================= VISUAL REFRESH (CSS ONLY) =================
+   All existing page text, links, markup and JavaScript are preserved. */
+:root{
+  --bg:#f3f7f5;
+  --card:#ffffff;
+  --ink:#172b25;
+  --muted:#71817a;
+  --line:#e0eae4;
+  --green:#087a55;
+  --green2:#e5f5ed;
+  --navy:#233b5a;
+  --gold:#d6a23a;
+  --rose:#c34b55;
+  --rose2:#fff0f0;
+  --shadow:0 8px 28px rgba(24,62,44,.065), 0 1px 3px rgba(24,62,44,.045);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(ellipse at 9% 0%,rgba(210,240,225,.45),transparent 34rem),
+    radial-gradient(ellipse at 100% 18%,rgba(223,237,229,.5),transparent 32rem),
+    var(--bg);
+  color:var(--ink);
+  font-size:18px;
+  line-height:1.9;
+  letter-spacing:0;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.wrap{
+  width:min(100%,1360px);
+  max-width:1360px;
+  padding:24px clamp(14px,3vw,34px) 40px;
+  gap:24px;
+}
+header{
+  position:relative;
+  align-items:center;
+  padding:22px clamp(18px,3vw,30px);
+  gap:18px;
+  background:rgba(255,255,255,.92);
+  border:1px solid var(--line);
+  border-radius:26px;
+  box-shadow:var(--shadow);
+  isolation:isolate;
+}
+header:before{
+  content:"";
+  position:absolute;
+  inset:0 auto 0 0;
+  width:5px;
+  background:linear-gradient(180deg,#28b58d,var(--green));
+  border-radius:26px 0 0 26px;
+  opacity:.9;
+}
+header>div:first-child{min-width:0;flex:1}
+header h1{
+  margin:0 0 4px;
+  font-size:clamp(1.45rem,2.8vw,2.05rem);
+  line-height:1.55;
+  font-weight:700!important;
+  letter-spacing:-.025em;
+  color:var(--ink);
+}
+header .sub{color:var(--muted);font-size:.94rem;line-height:1.8}
+.by{color:var(--green);font-weight:700!important;font-size:.88rem;margin-top:5px}
+.btn,.dbtn{
+  min-height:42px;
+  border:1px solid var(--line);
+  background:var(--card);
+  color:var(--ink);
+  border-radius:13px;
+  padding:9px 16px;
+  box-shadow:0 1px 2px rgba(15,50,34,.03);
+  transition:background .16s,border-color .16s,box-shadow .16s,transform .16s;
+}
+.btn:hover,.dbtn:hover{border-color:#a9d7c0;background:#f5fbf7;box-shadow:0 4px 12px rgba(20,95,61,.07)}
+.btn:active,.dbtn:active{transform:translateY(1px)}
+.btn:focus-visible,.tile:focus-visible,.lk:focus-visible,.dbtn:focus-visible{outline:3px solid rgba(8,122,85,.26);outline-offset:3px}
+#themeBtn{font-family:var(--en);font-size:1.2rem;min-width:44px;justify-content:center;color:var(--green)}
+#homeBtn{font-weight:700!important}
+#main{min-width:0;display:flex;flex-direction:column;gap:22px}
+/* Home categories */
+.tiles{grid-template-columns:repeat( auto-fit,minmax(min(100%,265px),1fr));gap:18px}
+.tile{
+  position:relative;
+  min-height:210px;
+  padding:23px;
+  gap:10px;
+  text-align:right;
+  border:1px solid var(--line);
+  border-radius:23px;
+  background:linear-gradient(155deg,#fff 0%,#fff 65%,#f8fcf9 100%);
+  box-shadow:var(--shadow);
+  transition:transform .18s,border-color .18s,box-shadow .18s;
+}
+.tile:hover{transform:translateY(-3px);border-color:#acd9c2;box-shadow:0 14px 34px rgba(20,80,53,.10)}
+.tile .ic,.cathead .ic{
+  width:58px;height:58px;
+  border-radius:18px;
+  background:linear-gradient(145deg,#e9f8f0,#d9f0e4);
+  color:var(--green);
+  box-shadow:inset 0 0 0 1px rgba(8,122,85,.035);
+}
+.tile .ic svg{width:29px;height:29px}
+.tile h2{font-size:1.24rem;line-height:1.55;font-weight:700!important;color:var(--ink)}
+.tile p{color:var(--muted);font-size:.94rem;line-height:1.8}
+.tile .meta{padding-top:10px}
+.cnt{background:var(--green2);color:var(--green);font-size:.88rem;padding:3px 13px}
+.livepill{background:#fff3d9;color:#8c6413;border:1px solid #f4e3b8;border-radius:999px;padding:3px 12px;font-size:.83rem;font-weight:700!important}
+.tile .meta .dpill{background:#e8f7ef;color:var(--green);padding:3px 12px;border:1px solid #d7efe2}
+/* Category selector */
+.nav{align-items:center;padding:3px 0}
+.pager{gap:8px;max-width:100%;overflow-x:auto;padding:3px;scrollbar-width:thin}
+.pager button{
+  white-space:nowrap;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.86);
+  border-radius:999px;
+  padding:8px 15px;
+  box-shadow:none;
+  color:var(--muted);
+  transition:background .16s,color .16s,border-color .16s;
+}
+.pager button:hover{border-color:#add7c1;color:var(--green)}
+.pager button.on{background:var(--green);color:#fff;border-color:var(--green);box-shadow:0 4px 10px rgba(8,122,85,.18)}
+.cathead{
+  padding:clamp(18px,3vw,28px);
+  gap:18px;
+  border:1px solid var(--line);
+  border-radius:24px;
+  background:linear-gradient(145deg,#fff,#fbfefc);
+  box-shadow:var(--shadow);
+}
+.cathead .ic{width:68px;height:68px;border-radius:20px;flex:0 0 68px}
+.cathead .ic svg{width:34px;height:34px}
+.cathead .tx{min-width:min(240px,100%)}
+.cathead h2{font-size:clamp(1.35rem,2.5vw,1.75rem);line-height:1.55;font-weight:700!important;letter-spacing:-.015em}
+.cathead .why{color:var(--muted);line-height:1.85}
+.how{background:#f0f8f3;border:1px solid #e1f0e7;border-radius:17px;padding:14px 17px;margin-top:14px}
+.how b{color:var(--green);font-weight:700!important}
+.how ol{margin:6px 0 0;padding-right:23px}
+.how li{padding:2px 0}
+/* Demo panel and sections */
+.demo{
+  border:1px solid #dcebe2;
+  border-inline-start:4px solid var(--green);
+  border-radius:23px;
+  box-shadow:var(--shadow);
+  padding:clamp(16px,2.5vw,25px);
+  background:var(--card);
+  min-width:0;
+}
+.demo>h3{margin:0 0 14px;font-size:1.23rem;line-height:1.6;font-weight:700!important;color:var(--ink)}
+#main>h3{color:var(--ink);font-weight:700!important;line-height:1.6}
+.items{grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:18px}
+.item{
+  padding:20px;
+  gap:10px;
+  border:1px solid var(--line);
+  border-radius:21px;
+  box-shadow:var(--shadow);
+  background:var(--card);
+  transition:transform .16s,box-shadow .16s,border-color .16s;
+}
+.item:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(24,62,44,.085)}
+.item.live{border-color:var(--gold);box-shadow:0 0 0 2px rgba(214,162,58,.08),var(--shadow)}
+.item h3{font-size:1.2rem;line-height:1.6;font-weight:700!important;color:var(--ink)}
+.item h3 .ar{font-size:1.4rem}
+.item .what{color:var(--muted);line-height:1.9}
+.feat{background:#f2f8f4;border:1px solid #e7f1ea;border-radius:15px;padding:11px 14px;line-height:1.85}
+.feat b{font-weight:700!important;color:var(--green)}
+.feat li{border-right:3px solid #9bcfb2;padding:3px 12px 3px 0;margin:5px 0}
+.item .sen b{font-weight:700!important;color:var(--green)}
+.item .cost{color:var(--muted);font-size:.9rem}
+.links{gap:8px;padding-top:6px}
+.lk{
+  border-radius:12px;
+  background:var(--green);
+  border:1px solid var(--green);
+  padding:9px 14px;
+  font-size:.92rem;
+  line-height:1.55;
+  box-shadow:0 2px 5px rgba(8,122,85,.10);
+  transition:transform .15s,box-shadow .15s,background .15s;
+}
+.lk:hover{background:#066747;box-shadow:0 5px 12px rgba(8,122,85,.15);transform:translateY(-1px)}
+.lk.sec{background:#fff;color:var(--green);border-color:#b9ddc9;box-shadow:none}
+.lk.sec:hover{background:#eff9f3;border-color:var(--green)}
+/* Video, notices, footer */
+.vids{grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr));gap:12px}
+.vid{border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:13px 15px;background:var(--card);transition:transform .15s,border-color .15s}
+.vid:hover{border-color:#acd9c2;transform:translateY(-2px)}
+.vid .ig{border-radius:12px}
+.avoid{background:var(--rose2);border:1px solid #f2d9d9;border-radius:17px;padding:15px 18px}
+.avoid b{color:var(--rose);font-weight:700!important}
+.foot{border-top:1px solid var(--line);padding:17px 8px 0;color:var(--muted);font-size:.82rem;line-height:1.9}
+.foot b{font-weight:700!important}
+/* Interactive demos */
+.dctl{gap:9px;margin:12px 0;align-items:center}
+.dctl label{gap:7px}
+.dctl select{min-height:42px;border:1px solid var(--line);border-radius:11px;padding:7px 11px}
+.dbtn{min-height:42px;border-radius:12px;padding:8px 14px}
+.dbtn.p{background:var(--green);border-color:var(--green);box-shadow:0 3px 8px rgba(8,122,85,.13)}
+.dbtn.big{padding:12px 22px;font-size:1.12rem}
+.dbtn.lt{min-width:54px;border-radius:13px}
+.dbtn.lt.on{background:var(--green2);border-color:var(--green)}
+.ayah{background:#f7faf8;border:1px solid var(--line);border-radius:19px;line-height:2.1;padding:17px 14px}
+.ayah .w{border-radius:10px}
+.tracewrap{border:1px dashed #b8d8c5;background:#f6faf7;border-radius:20px}
+.wheelbox{filter:drop-shadow(0 8px 18px rgba(20,60,40,.08))}
+.vs{background:#f5f9f6;border:1px solid transparent;border-radius:14px;padding:10px 13px}
+.vs.on{border-color:#e2c36c;background:#fffdf7}
+.ab{border:1px solid var(--line);background:#f7faf8;border-radius:15px;transition:background .15s,border-color .15s}
+.ab.on{border-color:#dfc36e;background:#fffdf5}
+.ck{border-bottom-color:var(--line);padding:8px 0}
+.qframe{border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+/* Typography overrides for the original normal-weight reset */
+h1,h2,h3,h4,b,strong{font-weight:700!important}
+button,input,select,textarea{font-family:inherit}
+button{touch-action:manipulation}
+::selection{background:#c7ead7;color:#153d2a}
+@media (min-width:1100px){
+  .tiles{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .items{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:760px){
+  .wrap{padding:14px 14px 28px;gap:18px}
+  header{align-items:flex-start;padding:17px 17px;gap:12px;border-radius:20px}
+  header>div:first-child{flex-basis:100%}
+  header>div:last-child{width:100%;justify-content:flex-start!important}
+  header h1{font-size:1.4rem;line-height:1.65}
+  header .sub{font-size:.88rem}
+  .btn{padding:8px 13px;min-height:40px}
+  #main{gap:17px}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .tile{padding:16px;min-height:0;border-radius:18px}
+  .tile .ic{width:48px;height:48px;border-radius:15px}
+  .tile .ic svg{width:25px;height:25px}
+  .tile h2{font-size:1.03rem}
+  .tile p{display:block;font-size:.84rem;line-height:1.7}
+  .tile .meta{gap:8px;flex-wrap:wrap}
+  .cnt,.tile .meta .dpill{font-size:.78rem}
+  .cathead{padding:17px;gap:13px;border-radius:20px}
+  .cathead .ic{width:54px;height:54px;flex-basis:54px;border-radius:15px}
+  .cathead .ic svg{width:29px;height:29px}
+  .cathead .tx{min-width:0;flex-basis:calc(100% - 70px)}
+  .cathead h2{font-size:1.25rem}
+  .how{padding:11px 13px}
+  .demo{padding:15px;border-radius:19px}
+  .items{grid-template-columns:1fr;gap:13px}
+  .item{padding:16px;border-radius:18px}
+  .pager{width:100%;padding-bottom:6px}
+  .pager button{padding:7px 12px;font-size:.86rem}
+  .vgrid{grid-template-columns:1fr;gap:18px}
+  .wside{min-width:0;width:100%}
+  .wres{font-size:clamp(72px,20vw,100px);min-height:95px}
+}
+@media (max-width:420px){
+  body{font-size:15.5px}
+  .wrap{padding-inline:10px}
+  header{padding:15px;border-radius:18px}
+  .tiles{grid-template-columns:1fr}
+  .tile{padding:17px}
+  .tile .meta{padding-top:5px}
+  .cathead{gap:10px}
+  .cathead .tx{flex-basis:100%}
+  .feat{padding:10px 11px}
+  .lk{padding:8px 11px;font-size:.88rem}
+  .aac{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+  .ab{padding:10px 4px;font-size:.91rem}
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) header,
+  :root:not([data-theme="light"]) .tile,
+  :root:not([data-theme="light"]) .cathead{background:linear-gradient(145deg,var(--card),#17231d)}
+  :root:not([data-theme="light"]) .how,
+  :root:not([data-theme="light"]) .feat,
+  :root:not([data-theme="light"]) .ayah,
+  :root:not([data-theme="light"]) .tracewrap,
+  :root:not([data-theme="light"]) .vs,
+  :root:not([data-theme="light"]) .ab{background:#1d2b23;border-color:#2a4134}
+  :root:not([data-theme="light"]) .lk.sec{background:var(--card);border-color:#3d7558}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.tile,.item,.lk,.vid,.btn,.dbtn{transition:none!important}}
+
+
+
+/* ================= DISTINCT SOFT CATEGORY COLORS (CSS ONLY) =================
+   Each home/category tile has its own gentle tint. Content and behavior unchanged. */
+.tiles > .tile:nth-child(1){--tile-tint:#eaf7ef;--tile-icon:#d6f0e1;--tile-accent:#16835b;--tile-edge:#d6ebdf}
+.tiles > .tile:nth-child(2){--tile-tint:#edf5ff;--tile-icon:#dceaff;--tile-accent:#3978bd;--tile-edge:#d9e8f8}
+.tiles > .tile:nth-child(3){--tile-tint:#f3efff;--tile-icon:#e5dcff;--tile-accent:#7655b5;--tile-edge:#e5ddf8}
+.tiles > .tile:nth-child(4){--tile-tint:#fff3e9;--tile-icon:#ffe4d0;--tile-accent:#bb7440;--tile-edge:#f5e2d2}
+.tiles > .tile:nth-child(5){--tile-tint:#fff9e6;--tile-icon:#fff0bd;--tile-accent:#a77b17;--tile-edge:#f2e8c9}
+.tiles > .tile:nth-child(6){--tile-tint:#fff0f2;--tile-icon:#ffdee5;--tile-accent:#b85c75;--tile-edge:#f4dfe4}
+.tiles > .tile:nth-child(7){--tile-tint:#eaf8f8;--tile-icon:#d4efed;--tile-accent:#238a88;--tile-edge:#d5eceb}
+.tiles > .tile:nth-child(8n){--tile-tint:#f0f5e8;--tile-icon:#e0ebce;--tile-accent:#6a8739;--tile-edge:#e1e9d4}
+.tiles > .tile{
+  background:linear-gradient(145deg,color-mix(in srgb,var(--tile-tint) 92%,#fff),var(--tile-tint));
+  border-color:var(--tile-edge);
+}
+.tiles > .tile .ic{
+  background:var(--tile-icon);
+  color:var(--tile-accent);
+}
+.tiles > .tile .cnt{
+  background:rgba(255,255,255,.72);
+  color:var(--tile-accent);
+}
+.tiles > .tile .meta .dpill{
+  background:rgba(255,255,255,.62);
+  color:var(--tile-accent);
+}
+.tiles > .tile:hover{
+  border-color:var(--tile-accent);
+  box-shadow:0 14px 34px rgba(20,80,53,.10);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .tiles > .tile{
+    background:color-mix(in srgb,var(--tile-tint) 17%,var(--card));
+    border-color:color-mix(in srgb,var(--tile-accent) 30%,var(--line));
+  }
+  :root:not([data-theme="light"]) .tiles > .tile .ic{
+    background:color-mix(in srgb,var(--tile-icon) 28%,var(--card));
+    color:color-mix(in srgb,var(--tile-accent) 70%,#c7ead8);
+  }
+  :root:not([data-theme="light"]) .tiles > .tile .cnt,
+  :root:not([data-theme="light"]) .tiles > .tile .meta .dpill{
+    background:rgba(255,255,255,.06);
+    color:color-mix(in srgb,var(--tile-accent) 45%,#eaf3ee);
+  }
+}
+:root[data-theme="dark"] .tiles > .tile{
+  background:color-mix(in srgb,var(--tile-tint) 17%,var(--card));
+  border-color:color-mix(in srgb,var(--tile-accent) 30%,var(--line));
+}
+:root[data-theme="dark"] .tiles > .tile .ic{
+  background:color-mix(in srgb,var(--tile-icon) 28%,var(--card));
+  color:color-mix(in srgb,var(--tile-accent) 70%,#c7ead8);
+}
+:root[data-theme="dark"] .tiles > .tile .cnt,
+:root[data-theme="dark"] .tiles > .tile .meta .dpill{
+  background:rgba(255,255,255,.06);
+  color:color-mix(in srgb,var(--tile-accent) 45%,#eaf3ee);
+}
+
+
+/* SENKit brand identity */
+.senkit-brand{display:flex;direction:ltr;align-items:center;gap:10px;margin:0 0 12px;width:max-content;max-width:100%;font-family:var(--en);}
+.senkit-logo-mark{width:40px;height:40px;flex:0 0 40px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(145deg,#2d8b63,#176044);color:#fff;font-size:14px;font-weight:800;letter-spacing:-.06em;box-shadow:0 5px 12px rgba(31,111,80,.18);}
+.senkit-brand-copy{display:flex;flex-direction:column;gap:3px;line-height:1.15;}
+.senkit-brand-name{font-size:1.12rem;font-weight:800;letter-spacing:-.035em;color:var(--green);}
+.senkit-brand-tagline{font-size:.72rem;font-weight:500;color:var(--muted);letter-spacing:.005em;}
+@media(max-width:560px){.senkit-brand{margin-bottom:8px}.senkit-logo-mark{width:36px;height:36px;flex-basis:36px;border-radius:11px}.senkit-brand-name{font-size:1.05rem}.senkit-brand-tagline{font-size:.68rem}}
+
+
+/* Desktop category-card typography: larger Dhivehi titles and descriptions.
+   Mobile typography remains controlled by the existing responsive rules. */
+@media (min-width: 761px) {
+  .tile h2 {
+    font-size: clamp(1.45rem, 1.7vw, 1.75rem) !important;
+    line-height: 1.7;
+  }
+  .tile p {
+    font-size: clamp(1.05rem, 1.15vw, 1.2rem) !important;
+    line-height: 1.9;
+  }
+}
+
+</style>
+</head>
+<body dir="rtl">
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="senkit-brand" aria-label="SENKit">
+        <span class="senkit-logo-mark" aria-hidden="true">SK</span>
+        <span class="senkit-brand-copy"><span class="senkit-brand-name">SENKit</span><span class="senkit-brand-tagline">Tools that make teaching easier.</span></span>
+      </div>
+      <h1>ޤުރުއާން ކިޔަވައިދިނުމަށް ބޭނުން ކުރެވިދާނެ ވަޞީލަތްތައް</h1>
+      <div class="sub">ސެޝަން 5 · ޤުރުއާން ޓްރެއިނިންގ ފޯ ސެން ޓީޗަރސް · 20 އޮކްޓޫބަރު 2026</div>
+      <div class="by">ތައްޔާރުކުރީ: އަޙްމަދު އަޙްސަން</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn" id="homeBtn" hidden>→ ހުރިހާ ބައިތައް</button>
+      <button class="btn" id="themeBtn" aria-label="ތީމް">◐</button>
+    </div>
+  </header>
+
+
+  <main id="main"></main>
+
+  <div class="foot"><b>ތައްޔާރުކުރީ: އަޙްމަދު އަޙްސަން</b> · ލިންކުތައް 2026 އޮކްޓޫބަރު · އެޕް ސްޓޯރު ލިންކުން އެޕްގެ ނަމުން ހޯދާ · <span class="en">IUM · Dept. of Inclusive Education</span></div>
+</div>
+
+<script>
+const ITEMS = [[{"n": "Quran.com", "what": "ޤުރުއާން ކިޔެވުމާއި އަޑުއެހުމަށް ބޭނުންކުރެވޭ ހިލޭ ވެބްސައިޓެކެވެ. އެޕެއް އިންސްޓޯލް ނުކޮށް ބްރައުޒަރުން ބޭނުންކުރެވޭއިރު، އެޕްގެ ގޮތުގައިވެސް ލިބެއެވެ.", "cost": "ހިލޭ", "links": [["https://quran.com", "quran.com"], ["https://play.google.com/store/apps/details?id=com.quran.labs.androidquran&hl=en&pli=1", "Android"], ["https://apps.apple.com/us/app/quran-by-quran-com-%D9%82%D8%B1%D8%A2%D9%86/id1118663303", "iOS"]], "live": "", "f": ["ކިޔެވުމުގެ ސްޕީޑް 0.5 އާއި 0.75 އަށް ލަސްކުރެވުން", "އާޔަތެއް ނުވަތަ އާޔަތްތަކެއް ބޭނުން އަދަދަކަށް ރިޕީޓްކުރެވުން", "ޤާރީ ކިޔަވާއިރު ބަސްތައް ކުލަވުން", "ގިނަ ޤާރީންގެ ތެރެއިން ހޮވެވުން (ޙުޞަރީ ހުށަހަޅަމެވެ)", "އިޝްތިހާރެއް ނެތުން"]}, {"n": "Quran Loop", "what": "އާޔަތްތަކުގެ ރޭންޖެއް ބޭނުން އަދަދަކަށް ލޫޕްކުރުމަށް ޚާއްޞަކޮށް ހަދާފައިވާ ވެބް އެޕެއް.", "cost": "ހިލޭ", "links": [["https://www.google.com/search?q=Quran+Loop+web+app", "ހޯދާ: Quran Loop"]], "live": "", "f": ["އެއް އާޔަތް 10 ފަހަރަށްވުރެ ގިނައިން ލަސްކޮށް ތަކުރާރުކުރެވުން", "ތަޖުވީދު ކުލަތަކާއެކު ފެނުން", "ލިޔުން ބޮޑުކުރެވުން"]}, {"n": "Ayat – KSU", "what": "ކިންގް ސަޢޫދު ޔުނިވަރސިޓީން ތައްޔާރުކޮށްފައިވާ ޤުރުއާނެވެ. ވެބްސައިޓް، ކޮމްޕިއުޓަރ ޕްރޮގްރާމް އަދި އެޕްގެ ގޮތުގައި ލިބެއެވެ.", "cost": "ހިލޭ", "links": [["https://quran.ksu.edu.sa", "quran.ksu.edu.sa"], ["https://play.google.com/store/search?q=Ayat%20Al%20Quran%20King%20Saud%20University&c=apps", "Android"], ["https://apps.apple.com/us/app/id634325420", "iOS"]], "live": "", "f": ["މުޞްޙަފުގެ ޞަފްޙާގެ ގޮތަށް ފެނުން", "އާޔަތް ރިޕީޓްކުރެވުން", "ހިތުދަސްކުރުމަށް އާޔަތްތައް ފޮރުވޭ ފީޗަރ", "ގިނަ ޤާރީން"]}], [{"n": "Tarteel AI", "what": "ކުއްޖާ ކިޔަވާއިރު އަޑުއަހައި، ކިޔަވާ ބަސްތައް ފޮލޯކޮށް، ކުށްތައް ފާހަގަކޮށްދޭ AI އެޕެއް.", "cost": "ހިލޭ (ޕްރިމިއަމް އެބަހުރި)", "links": [["https://www.tarteel.ai", "tarteel.ai"], ["https://play.google.com/store/apps/details?id=com.mmmoussa.iqra", "Android"], ["https://apps.apple.com/us/app/id1391009396", "iOS"]], "live": "", "f": ["ކިޔަވާއިރު ބަސްތައް ފޮލޯކުރުން", "ކުށް ފާހަގަކުރުން", "ސޫރަތް ކިޔަން ފަށާފައިވާ ކުދިންނަށް ރަނގަޅު", "ބޭނުންކުރަންވާނީ ޓީޗަރު ކައިރީގައި ހުރެގެންނެވެ"]}, {"n": "Al-Siraat – AI ޤުރުއާން", "what": "ކުއްޖާގެ ކިޔެވުން އަޑުއަހައި، ކުށް ރަނގަޅުކޮށްދޭ AI އެޕެއް. ޤުރުއާނާއި ޤާޢިދާ ދަސްކުރުމަށް ކުއްޖާއަށް ޚާއްޞަ މަގެއް ތައްޔާރުކޮށްދެއެވެ.", "f": ["ކިޔެވުން އަޑުއަހައި އެވަގުތު ކުށް ރަނގަޅުކޮށްދިނުން", "ޤާޢިދާ ދަސްކުރުމަށް ތަރުތީބުވެފައިވާ މަގެއް", "ކުއްޖާގެ ސްޕީޑަށް ބަލައި ފިލާވަޅު ބަދަލުވުން", "ކުރިއެރުން ބެލުމާއި ހަދިޔާ", "ބޭނުންކުރަންވާނީ ޓީޗަރު ކައިރީގައި ހުރެގެންނެވެ"], "cost": "ބަލަން ޖެހޭ", "links": [["https://alsiraat.ai", "alsiraat.ai"], ["https://play.google.com/store/apps/details?id=com.alquran.aiquran.quranlearning&hl=en", "Android"], ["https://apps.apple.com/qa/app/al-siraat-learn-quran-with-ai/id6753738517", "iOS"]], "live": ""}], [{"n": "ޤާޢިދާ މަދަނިއްޔާ – ސެން ވެބްސައިޓް", "what": "މި ވޯކްޝޮޕަށް ޚާއްޞަކޮށް ހަދާފައިވާ ވެބްސައިޓެކެވެ. ޤާޢިދާ މަދަނިއްޔާގެ ފިލާވަޅުތައް ސެން ކުދިންނަށް ފަސޭހަ ގޮތަކަށް ހުށަހަޅައެވެ.", "cost": "ހިލޭ", "links": [["https://claude.ai/artifact/9VgPkEdeiVZf7DwFpbEANW", "ޤާޢިދާ ވެބްސައިޓް ހުޅުވާ"]], "live": "", "f": ["ބާބު 1 އިން 4 އަށް، 25 ފިލާވަޅު", "ބަލާ، ފަހަތުން ކިޔާ، ލިޔޭ، ހޮވާ – ހަތަރު މޯޑް", "ތަރި ބޯޑާއި ޓީޗަރުގެ ސެޓިންގްސް", "އިންސްޓޯލް ނުކޮށް ބްރައުޒަރުން؛ އިނގިރޭސި އަދި ދިވެހި"]}, {"n": "QaidaKids – Arabic for Kids", "what": "އަރަބި އަކުރު ދަސްކޮށްދޭ ކުޑަކުދިންގެ އެޕެއް.", "cost": "ހިލޭ / އިން-އެޕް", "links": [["https://play.google.com/store/apps/details?id=com.zentryx.qaidakids", "Android"]], "live": "", "f": ["އަކުރު ޓްރޭސްކުރެވުން", "ސާފު އަޑު", "ތަޞްވީރުތައް", "ފަންސުރު ހިފަން އުނދަގޫ ކުއްޖާއަށް އިނގިލިން ލިޔެވުން"]}, {"n": "Abjad – Learn Arabic Letters", "what": "އަރަބި އަކުރު ލިޔަން ދަސްކޮށްދޭ ސާދާ އެޕެއް.", "cost": "ހިލޭ / އިން-އެޕް", "links": [["https://play.google.com/store/search?q=Abjad%20Learn%20Arabic%20Letters&c=apps", "Android"], ["https://www.apple.com/us/search/Abjad%20Arabic%20letters?src=globalnav", "iOS"]], "live": "", "f": ["ގައިޑެޑް ޓްރޭސް", "ސާދާ ސްކްރީން – ސަމާލުކަން ބަހާލާ ކަންކަން މަދު", "ކުޑަކުދިންނަށް ފެތޭ"]}, {"n": "Arabic Letter Journey", "what": "އަކުރު ލިޔުމުގެ ރޮނގުތައް ތަރުތީބުން ދަސްކޮށްދޭ އެޕެއް.", "cost": "ހިލޭ / އިން-އެޕް", "links": [["https://play.google.com/store/search?q=Arabic%20Letter%20Journey&c=apps", "Android"], ["https://www.apple.com/us/search/Arabic%20Letter%20Journey?src=globalnav", "iOS"]], "live": "", "f": ["ރޮނގަކަށްފަހު ރޮނގެއް ހަމަޖެހިގެން ލިޔުން", "ލަސްލަހުން ދަސްކުރާ ކުއްޖާއަށް ފެތޭ"]}, {"n": "Noorani Qaida (އިންޓަރެކްޓިވް އެޕް)", "what": "ނޫރާނީ ޤާޢިދާގެ ފިލާވަޅުތައް އިންޓަރެކްޓިވްކޮށް ހުށަހަޅާ އެޕެއް.", "cost": "ހިލޭ / އިން-އެޕް", "links": [["https://play.google.com/store/apps/details?id=com.quranreading.nooraniqaida", "Android"], ["https://apps.apple.com/us/app/id918383017", "iOS"]], "live": "", "f": ["އަކުރަށް ފިތާލުމުން އަޑު އިވުން", "ޤާޢިދާގެ ފިލާވަޅުތައް ތަރުތީބުން", "އެއް އެޕެއް ހޮވައިގެން ބަދަލުނުކޮށް ބޭނުންކުރުން ރަނގަޅު؛ އިޝްތިހާރު ނެތް އެޕެއް ހޮވާށެވެ"]}], [{"n": "Colour Coded Tajweed Quran", "what": "ތަޖުވީދުގެ ޤަވާޢިދު ކުލައިން ފާހަގަކޮށްފައިވާ މުޞްޙަފް އެޕްތަކެވެ. ގިނަ ނަންނަމުން ލިބޭއިރު، Quran Majeed ގައިވެސް ތަޖުވީދު މޯޑް ހުރެއެވެ.", "cost": "ހިލޭ / އަގު", "links": [["https://play.google.com/store/apps/details?id=com.pakdata.QuranMajeed", "Android"], ["https://apps.apple.com/us/app/quran-majeed-%D8%A7%D9%84%D9%82%D8%B1%D8%A7%D9%86-%D8%A7%D9%84%D9%83%D8%B1%D9%8A%D9%85/id365557665", "iOS"]], "live": "", "f": ["މައްދު، ޣުންނަ، ޤަލްޤަލާ ކުލައިން ފާހަގަކޮށްފައި"]}, {"n": "Quran.com – ތަޖުވީދު މުޞްޙަފު", "what": "Quran.com ގައި ކުލައިން ތަޖުވީދު ފާހަގަކޮށްފައިވާ މުޞްޙަފު އޮންލައިންކޮށް ކިޔެވޭނެއެވެ. ސެޓިންގްސްގައި މުޞްޙަފުގެ ފޮންޓް «Tajweed» އަށް ބަދަލުކުރަންވާނެއެވެ.", "f": ["ތަޖުވީދުގެ ޤަވާޢިދު ކުލައިން", "ޙުޞަރީގެ ކިޔެވުމާއެކު ބަސްތައް ކުލަވުން", "ލަސް ސްޕީޑާއި ރިޕީޓް", "އިންސްޓޯލް ނުކޮށް ބްރައުޒަރުން"], "cost": "ހިލޭ", "links": [["https://quran.com/108", "quran.com"]], "live": ""}, {"n": "QuranFlash – مصحف التجويد", "what": "ތަފާތު މުޞްޙަފުތައް ޞަފްޙާގެ ގޮތަށް އޮންލައިންކޮށް ކިޔެވޭ ވެބްސައިޓެކެވެ. ދާރުލް މަޢުރިފާގެ ކުލަ ކޯޑެޑް ތަޖުވީދު މުޞްޙަފުވެސް އެބަހުއްޓެވެ.", "f": ["ދާރުލް މަޢުރިފާގެ ތަޖުވީދު މުޞްޙަފު (604 ޞަފްޙާ)", "ޗާޕު މުޞްޙަފު ފަދައިން ޞަފްޙާގެ ގޮތަށް ފެނުން", "ސްކްރީނުގައި ފުރިހަމަ ޞަފްޙާ ބޮޑުކޮށް ދެއްކޭ"], "cost": "ހިލޭ", "links": [["https://app.quranflash.com/", "app.quranflash.com"]], "live": ""}], [{"n": "Wordwall", "what": "ޓީޗަރަށް އަމިއްލައަށް ދެ މިނެޓުން ގޭމް ހެދޭ ވެބްސައިޓެކެވެ.", "cost": "ހިލޭ (މަހަކު 5 ގޭމް)", "links": [["https://wordwall.net", "wordwall.net"]], "live": "", "f": ["މެޗް އަޕް، ވީލް، ބެލޫން، މެމޮރީ ފަދަ ގިނަ ގޭމް", "ޓައިމަރާއި ލީޑަރބޯޑު އޮފްކުރެވުން", "އަރަބި އަކުރު ލިޔެވުމާއި އަޑު ރެކޯޑްކުރެވުން", "ހިލޭ ޕްލޭނުގައި މަހަކު 5 ގޭމް"]}, {"n": "Kahoot", "what": "ކްލާހުގައި ކުޅޭ ކުއިޒު ވެބްސައިޓެކެވެ. ސުވާލު ސްކްރީނުގައި ފެނޭއިރު، ޖަވާބު ދެނީ ފޯނުން ނުވަތަ ޓެބްލެޓުންނެވެ.", "cost": "ހިލޭ (ބޭސިކް)", "links": [["https://kahoot.com", "kahoot.com"], ["https://play.google.com/store/apps/details?id=no.mobitroll.kahoot.android", "Android"], ["https://apps.apple.com/us/app/id1131203560", "iOS"]], "live": "", "f": ["ސެން ކުދިންނަށް: އެންމެ ދިގު ޓައިމް ލިމިޓް ނުވަތަ އަމިއްލަ ސްޕީޑުގެ (self-paced) މޯޑް", "No points ސެޓިންގ", "ކުދިން އެކަކު އަނެކަކާ ވާދަ ނުކުރުވުން"]}, {"n": "Quizizz (Wayground)", "what": "ކުއްޖާ އަމިއްލަ ސްޕީޑުގައި ޖަވާބުދޭ ކުއިޒު ވެބްސައިޓެކެވެ.", "cost": "ހިލޭ (ބޭސިކް)", "links": [["https://wayground.com", "wayground.com"], ["https://play.google.com/store/apps/details?id=com.quizizz_mobile", "Android"], ["https://apps.apple.com/us/app/id1160249042", "iOS"]], "live": "", "f": ["ޓައިމަރ އޮފްކުރެވުން", "ކޮންމެ ކުއްޖަކު އަމިއްލަ ސްޕީޑުގައި – ސެން ކުދިންނަށް Kahoot އަށްވުރެ ފެތޭ"]}], [{"n": "YouTube", "what": "ޤުރުއާނާއި އަރަބި އަކުރުގެ ވީޑިއޯ ހޯދާ ތަނެވެ. ހޯދާނެ ބަސްތައް: Noorani Qaida animated · Arabic letters sounds for kids · Husary Surah Ikhlas slow · Juz Amma for kids repeat", "cost": "ހިލޭ", "links": [["https://www.youtube.com/results?search_query=Noorani+Qaida+animated", "Noorani Qaida animated"], ["https://www.youtube.com/results?search_query=Arabic+letters+sounds+for+kids", "Arabic letters sounds"], ["https://www.youtube.com/results?search_query=Husary+Surah+Ikhlas+slow", "Husary Ikhlas slow"], ["https://play.google.com/store/apps/details?id=com.google.android.youtube", "Android"], ["https://apps.apple.com/us/app/id544007664", "iOS"]], "live": "", "f": ["ވީޑިއޯ ހޮވާނީ ޗެކްލިސްޓުން: 2–3 މިނެޓު، މިއުޒިކް ނެތް، ސާދާ ސްކްރީން", "ސްޕީޑް 0.75", "ހަތަރު ފިޔަވަޅު: ޕޯޒް، ފަހަތުން ކިޔުން، ޙަރަކާތް، ސުވާލު"]}, {"n": "YouTube Kids", "what": "ކުޑަކުދިންނަށް ރައްކާތެރިކޮށް ހަދާފައިވާ ޔޫޓިއުބެވެ.", "cost": "ހިލޭ", "links": [["https://www.youtubekids.com", "youtubekids.com"], ["https://play.google.com/store/apps/details?id=com.google.android.apps.youtube.kids", "Android"], ["https://apps.apple.com/us/app/id936971630", "iOS"]], "live": "", "f": ["އިޝްތިހާރާއި ނުރައްކާތެރި ކޮންޓެންޓް ފިލްޓަރކޮށްފައި", "ޓައިމަރ ސެޓްކުރެވުން", "ކުއްޖާގެ އަތަށް ޓެބްލެޓް ދޭނަމަ މިއިން"]}, {"n": "Zaky – One4Kids / Muslim Kids TV", "what": "ސޫރަތްތަކުގެ މާނައާއި ވާހަކަ އެނިމޭޝަނުން ދައްކާ ޗެނަލްތަކެވެ.", "cost": "ހިލޭ / ސަބްސްކްރިޕްޝަން", "links": [["https://www.youtube.com/results?search_query=Zaky+One4Kids", "Zaky"], ["https://www.youtube.com/results?search_query=Muslim+Kids+TV", "Muslim Kids TV"]], "live": "", "f": ["މާނައާއި އަޚްލާޤު ދަސްކުރުމަށް ރަނގަޅު", "ޤާޢިދާއާއި ކިޔެވުމަކަށް ނޫން", "ބައެއް ވީޑިއޯގައި މިއުޒިކް ހުރުމުން ޗެކްލިސްޓުން ބަލާށެވެ"]}, {"n": "Canva for Education", "what": "ޓީޗަރަށް ވިޝުއަލް ކާޑު، ސްލައިޑް އަދި ކުރު އެނިމޭޓެޑް ވީޑިއޯ ހެދޭ ވެބްސައިޓެކެވެ.", "cost": "ޓީޗަރުންނަށް ހިލޭ", "links": [["https://www.canva.com/education/", "canva.com/education"], ["https://play.google.com/store/apps/details?id=com.canva.editor", "Android"], ["https://apps.apple.com/us/app/id897446215", "iOS"]], "live": "", "f": ["ޓީޗަރުގެ ޓޫލެކެވެ، ކުއްޖާގެ އެޕެއް ނޫނެވެ", "ވިޝުއަލް ޝެޑިއުލް ހެދުން", "އަކުރު ކާޑު ހެދުން", "ޓީޗަރުންނަށް ހިލޭ"]}], [{"n": "ވޮއިސް ރެކޯޑަރު (ފޯނުގައި ހުރި)", "what": "ފޯނުގައި ހުންނަ ވޮއިސް ރެކޯޑަރެވެ. ކުއްޖާގެ ކިޔެވުން ރެކޯޑްކޮށް އަލުން އަޑުއެހުމަށް ބޭނުންކުރެވެއެވެ.", "cost": "ހިލޭ", "links": [["https://www.google.com/search?q=voice+recorder+app", "ފޯނުގައި ހުރޭ"]], "live": "", "f": ["މަހަކު އެއްފަހަރު ރެކޯޑްކޮށް ކުރިއެރުން ބެލުން", "ބެލެނިވެރިޔާއާ ހިއްސާކުރުން", "ކުއްޖާއަށް އަމިއްލަ އަޑު އިވުން"]}, {"n": "Visual Timer", "what": "ވަގުތު ފެންނަ ގޮތަށް ދައްކާ ޓައިމަރ އެޕެއް. ރަތް ބައި ކުޑަވަމުން ގޮސް ވަގުތު ނިމޭ ގޮތް ފެނެއެވެ.", "cost": "ހިލޭ", "links": [["https://play.google.com/store/search?q=Visual%20Timer&c=apps", "Android"], ["https://www.apple.com/us/search/Visual%20Timer?src=globalnav", "iOS"]], "live": "", "f": ["ޤުރުއާން ގަޑި ނިމޭނެ ވަގުތު ކުއްޖާއަށް ފެނުން", "ބަދަލުތަކަށް ކުއްޖާ ތައްޔާރުކުރުން"]}, {"n": "Cboard – ހިލޭ AAC", "what": "ހިލޭ، އޯޕަން ސޯސް AAC އެވެ. ވެބްސައިޓާއި ޓެބްލެޓުން ބޭނުންކުރެވެއެވެ.", "cost": "ހިލޭ", "links": [["https://www.cboard.io", "cboard.io"], ["https://play.google.com/store/apps/details?id=com.unicef.cboard", "Android"], ["https://apps.apple.com/us/app/id6453683048", "iOS"]], "live": "", "f": ["ތަޞްވީރަށް ފިތާލުމުން އަޑު އިވުން", "ވާހަކަ ނުދައްކާ ކުއްޖާއަށް ޤުރުއާން ގަޑީގެ ބޯޑު ހެދުން: ﷲ، އަޑުއަހާ، ކިޔާ، އަދި އެއްފަހަރު، ނިމުނީ", "ޕްރިންޓު AAC ބޯޑުގެ ޑިޖިޓަލް ވައްތަރު"]}, {"n": "AAC – TD Snap / Proloquo2Go", "what": "ވާހަކަ ނުދައްކާ ކުދިންނަށް ސިމްބަލްގެ ޒަރީޢާއިން ވާހަކަ ދެއްކުމަށް ހަދާފައިވާ އެޕްތަކެވެ.", "cost": "އަގުބޮޑު", "links": [["https://us.tobiidynavox.com/products/td-snap", "TD Snap"], ["https://play.google.com/store/search?q=TD%20Snap%20Tobii%20Dynavox&c=apps", "TD Snap – Android"], ["https://apps.apple.com/us/app/id1072799231", "TD Snap – iOS"], ["https://apps.apple.com/us/app/id308368164", "Proloquo2Go – iOS"]], "live": "", "f": ["ޤުރުއާނުގެ ސިމްބަލް ލެވުން: ފާތިޙާ، އަދި އެއްފަހަރު، ނިމުނީ", "އަގުބޮޑުވާތީ ޕްރިންޓު AAC ބޯޑު ބަދަލެއްގެ ގޮތުގައި"]}]];
+const IC = {
+  quran:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5C5.5 4 8.5 4 12 6c3.5-2 6.5-2 9-.5V19c-2.5-1.5-5.5-1.5-9 .5-3.5-2-6.5-2-9-.5z"/><path d="M12 6v13.5"/></svg>',
+  ai:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+  letters:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l5-14 5 14M6 15h6"/><path d="M15 18c1.5 1.5 4.5 1.5 5-1 .5-2.5-3-3-3-5.5 0-2 2.5-2.5 3.5-1"/></svg>',
+  tajweed:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><circle cx="12" cy="16" r="3"/></svg>',
+  games:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 10.5v4M5 12.5h4"/><circle cx="16" cy="11.5" r=".8" fill="currentColor"/><circle cx="18" cy="14" r=".8" fill="currentColor"/></svg>',
+  video:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor"/></svg>',
+  assist:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><path d="M15 17l2 2 3-4"/></svg>',
+};
+const IG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>`;
+const EXT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>';
+
+const CATS = [
+  { id:"quran", demoTitle:"ހައިލައިޓް + ލޫޕް – ސޫރަތުލް އިޚްލާޞް", icon:"quran", title:"ޤުރުއާން އަޑުއެހުން އަދި ކިޔެވުން", short:"ލަސް ސްޕީޑް، އާޔަތް ލޫޕް، ބަސް ހައިލައިޓް",
+    why:"ސެން ކުއްޖާއަށް އެންމެ ބޭނުންވަނީ އެއް އާޔަތް ލަސްކޮށް، ގިނަ ފަހަރު، އެއް އަޑަކުން އަޑުއެހުން.",
+    how:["quran.com ހުޅުވާ → ސޫރަތް ހޮވާ (އިޚްލާޞް)","ސެޓިންގްސް: ޤާރީ ޙުޞަރީ؛ ތަރުޖަމާ އޮފް؛ ފޮންޓް ބޮޑު","ސްޕީޑް 0.75 ނުވަތަ 0.5","ރިޕީޓް: އާޔަތް 1 – 5 ފަހަރު","ކޮންމެ ބުރަކަށްފަހު ޕޯޒް – ކުއްޖާ ފަހަތުން ކިޔުން"] },
+  { id:"ai", demoTitle:"ކުށް ފާހަގަކޮށް ތަކުރާރުކުރުން", icon:"ai", title:"ކިޔެވުން އަޑުއަހައި ރަނގަޅުކޮށްދޭ (AI)", short:"ކުއްޖާ ކިޔަވާއިރު ކުށް ފާހަގަކުރޭ",
+    why:"ސޫރަތް ކިޔަން ފަށާފައިވާ ކުދިންނަށް. ކުށް ފާހަގަވުން ބައެއް ކުދިންނަށް އުނދަގޫ – ޓީޗަރު ކައިރީގައި ބޭނުންކުރޭ.",
+    how:["ކުއްޖާ ކިޔާ ސޫރަތް ހުޅުވާ","މައިކް އޮން – ކުއްޖާ ކިޔަވާ","ފާހަގަވާ ބަސް ޓީޗަރު ކިޔައިދީ ފަހަތުން ކިޔުއްވާ","ކުށަށް ނޫން – މަސައްކަތަށް ތަޢުރީފު"] },
+  { id:"letters", demoTitle:"އަކުރު ޓްރޭސްކުރުން + އަޑު", icon:"letters", title:"އަކުރު އަދި ޤާޢިދާ", short:"ޓްރޭސް + އަޑު + ތަޞްވީރު",
+    why:"އަތްލުމާއި އަޑުއެހުމާއި ފެނުން އެއްކޮށް. ފަންސުރު ނުހިފޭ ކުއްޖާއަށް.",
+    how:["އެއް އެޕް ހޮވާފައި ބަދަލުނުކުރޭ","ދުވާލަކު 2 އަކުރު – މުޅި ލިސްޓު އެއްފަހަރާ ނޫން","ކުއްޖާ އިނގިލިން ޓްރޭސް → އަޑު → ކުއްޖާ ތަކުރާރު","ދެން ޙަޤީޤީ ކާޑުން ހަމަ އެ އަކުރު"] },
+  { id:"tajweed", demoTitle:"ކުލަ ކޯޑެޑް ތަޖުވީދު – ސޫރަތުލް ކައުޘަރު", icon:"tajweed", title:"ތަޖުވީދު – ކުލައިން", short:"މައްދު، ޣުންނަ ކުލައިން ފާހަގަކުރާ މުޞްޙަފް",
+    why:"ވިޝުއަލް މެމޮރީ ނުވަތަ ޕްރޮސެސިންގ ދަށް ކުއްޖާއަށް – ކުލަ ފެނުމުން ދިގުކުރަން އެނގޭ.",
+    how:["އެއް ކުލައެއް އެއްފަހަރު – ފުރަތަމަ މައްދު (ރަތް)","ކުލަ ފެނުމުން ޓީޗަރު ދިގުކޮށް ކިޔައިދީ","ކުއްޖާ ކުލައަށް އިނގިލި ޖައްސައިގެން ކިޔުން"] },
+  { id:"games", videos:["https://www.instagram.com/reel/DNbnw7hiyC4/","https://www.instagram.com/reel/DePhM5rO64_/","https://www.instagram.com/reel/Dcttk7hM1zT/","https://www.instagram.com/reel/DTLX-rtjLps/","https://www.instagram.com/reel/DItLpumskQq/","https://www.instagram.com/reel/DdenBmxs3kG/","https://www.instagram.com/reel/Dc3WvrGMmjO/","https://www.instagram.com/reel/Ddbiv2dMT8J/","https://www.instagram.com/reel/DeM4sV6uvVp/"], demoTitle:"ސްޕިން ދަ ވީލް – ސެން މޯޑު", icon:"games", title:"ގޭމް އަދި ކުއިޒު", short:"ތަކުރާރު ފޫހިނުވެ – ބިރު ނެތި",
+    why:"ސަމާލުކަން، ތަކުރާރު، ވަގުތުން އިނާމު. ސެން އަށް: ޓައިމަރާއި ލީޑަރބޯޑު އޮފް – ކުއްޖާ ވާދަކުރަނީ އަމިއްލަ ނަފްސާ.",
+    how:["wordwall.net → Create Activity → Match up","ވާތުގައި އަކުރު، ކަނާތުގައި ނަން/ތަޞްވީރު → Done","Switch template → Spin the wheel / Balloon pop","ސެޓިންގްސް: Timer އޮފް، Leaderboard އޮފް","Share → ލިންކު ބެލެނިވެރިންނަށް"] },
+  { id:"video", demoTitle:"ވީޑިއޯ ކޯޗް + ހޮވާ ޗެކްލިސްޓު", icon:"video", title:"ވީޑިއޯ", short:"ޕޯޒް – ފަހަތުން ކިޔުން – ޙަރަކާތް – ސުވާލު",
+    why:"2–3 މިނެޓު، މިއުޒިކް ނެތް، ލަސް ރާގު، ސާދާ ސްކްރީން. ދެއްކީމާ ނިމުނީއެއް ނޫން – ޓީޗަރު މެދުވެރިވުން.",
+    how:["20–30 ސިކުންތު ދައްކާފައި ޕޯޒް","ކުއްޖާ ފަހަތުން ކިޔުން","އަލުން – އަތުގެ ޙަރަކާތާއެކު","ނިމުމުން ކާޑު ދައްކާ ސުވާލު","ސެޓިންގްސް → Playback speed 0.75"] },
+  { id:"assist", demoTitle:"AAC ބޯޑު + ވިޝުއަލް ޓައިމަރ", icon:"assist", title:"އެހީތެރިވެދޭ ވަސީލަތްތައް", short:"AAC، ޓައިމަރ، ރެކޯޑަރު – ޤުރުއާން ގަޑިއަށް",
+    why:"ވާހަކަ ނުދައްކާ ކުއްޖާ ފިލާވަޅުގައި ބައިވެރިކުރުވުން؛ ނިމޭނެ ވަގުތު ފެނުން؛ ކުރިއެރުން ރެކޯޑްކުރުން.",
+    how:["AAC ބޯޑު: ފާތިޙާ / އިޚްލާޞް / އަދި އެއްފަހަރު / ނިމުނީ","ކުއްޖާ އިޝާރާތްކުރުމުން ޓީޗަރު ޢަމަލުކުރޭ","ވިޝުއަލް ޓައިމަރ ކުއްޖާއަށް ފެންނަން","މަހަކު އެއްފަހަރު ކިޔެވުން ރެކޯޑް – ބެލެނިވެރިޔާއަށް"] },
+];
+CATS.forEach((c, i) => c.items = ITEMS[i] || []);
+
+const main = document.getElementById("main"), homeBtn = document.getElementById("homeBtn");
+const esc = (s) => String(s).replace(/[&<>"]/g, (m) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[m]));
+const nameHtml = (n) => /[؀-ۿ]/.test(n) && !/[ހ-޿]/.test(n.split("–")[0]) ? n.replace(/^([^–]+)/, '<span class="ar">$1</span>') : (/[A-Za-z]/.test(n) && !/[ހ-޿]/.test(n) ? `<span class="en">${esc(n)}</span>` : esc(n));
+
+function home() {
+  clearDemo(); homeBtn.hidden = true;
+  main.innerHTML = `<div class="tiles">${CATS.map((c, i) => `
+    <button class="tile" data-i="${i}">
+      <span class="ic">${IC[c.icon]}</span>
+      <h2>${c.title}</h2>
+      <p>${c.short}</p>
+      <span class="meta"><span class="cnt">${c.items.length}</span><span class="dpill">ޑެމޯ</span></span>
+    </button>`).join("")}</div>`;
+  main.querySelectorAll(".tile").forEach((b) => b.onclick = () => open(+b.dataset.i));
+  try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+  window.scrollTo(0, 0);
+}
+
+function open(i) {
+  const c = CATS[i]; homeBtn.hidden = false;
+  main.innerHTML = `
+    <div class="nav"><div class="pager">${CATS.map((x, k) => `<button data-k="${k}" class="${k === i ? "on" : ""}">${x.title.split(" ").slice(0, 2).join(" ")}</button>`).join("")}</div></div>
+    <section class="cathead">
+      <span class="ic">${IC[c.icon]}</span>
+      <div class="tx"><h2>${c.title}</h2><p class="why">${c.why}</p>
+        <div class="how"><b>ކްލާހުގައި ބޭނުންކުރާނެ ގޮތް</b><ol>${c.how.map((h) => `<li>${esc(h)}</li>`).join("")}</ol></div>
+      </div>
+    </section>
+    <section class="demo"><h3><span class="livepill">ޑެމޯ</span> ${c.demoTitle}</h3><div id="demoBox"></div></section>
+    <h3 style="margin:6px 0 0;font-size:1.25rem">ވަސީލަތްތައް – ލިންކާއެކު</h3>
+    <div class="items">${c.items.map((x) => `
+      <article class="item">
+        <h3>${nameHtml(x.n)}</h3>
+        <p class="what">${esc(x.what)}</p>
+        <div class="feat"><b>ޚާއްޞަ ކަންކަން</b><ul>${x.f.map((t) => `<li>${esc(t)}</li>`).join("")}</ul></div>
+        <div class="cost">އަގު: ${esc(x.cost)}</div>
+        <div class="links">${x.links.map(([u, l], j) => `<a class="lk ${j ? "sec" : ""}" href="${esc(u)}" target="_blank" rel="noopener">${EXT}<span class="${/[A-Za-z]/.test(l) && !/[ހ-޿]/.test(l) ? "en" : ""}">${esc(l)}</span></a>`).join("")}</div>
+      </article>`).join("")}</div>${c.videos ? `<h3 style="margin:10px 0 0;font-size:1.25rem">ގޭމް އައިޑިއާ – ވީޑިއޯ</h3><div class="vids">${c.videos.map((u, k) => `<a class="vid" href="${esc(u)}" target="_blank" rel="noopener"><span class="ig">${IG}</span><span>ވީޑިއޯ ${k + 1}</span>${EXT}</a>`).join("")}</div>` : ""}`;
+  main.querySelectorAll(".pager button").forEach((b) => b.onclick = () => open(+b.dataset.k));
+  clearDemo(); DEMO[c.id](document.getElementById("demoBox"));
+  try { history.replaceState(null, "", "#" + c.id); } catch (e) {}
+  window.scrollTo(0, 0);
+}
+homeBtn.onclick = home;
+// ================= DEMOS =================
+const QAIDAH_URL = "https://claude.ai/artifact/9VgPkEdeiVZf7DwFpbEANW";
+let demoTimers = [];
+const clearDemo = () => { try { if (curAudio) { curAudio.onended = curAudio.onerror = null; curAudio.pause(); } } catch (e) {} demoTimers.forEach((t) => { clearTimeout(t); clearInterval(t); }); demoTimers = []; try { speechSynthesis.cancel(); } catch (e) {} };
+const later = (fn, ms) => { const t = setTimeout(fn, ms); demoTimers.push(t); return t; };
+function sayAr(t) { try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = "ar-SA"; u.rate = 0.7; const v = speechSynthesis.getVoices().find((v) => /^ar/i.test(v.lang)); if (v) u.voice = v; speechSynthesis.speak(u); } catch (e) {} }
+let actx = null;
+function chime(f = 660) { try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); const o = actx.createOscillator(), g = actx.createGain(); o.frequency.value = f; o.type = "sine"; g.gain.setValueAtTime(0.0001, actx.currentTime); g.gain.exponentialRampToValueAtTime(0.25, actx.currentTime + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + 0.5); o.connect(g).connect(actx.destination); o.start(); o.stop(actx.currentTime + 0.55); } catch (e) {} }
+
+// ar-uthmani-hafs (quran.ai)
+const IKHLAS = [["قُلْ","هُوَ","ٱللَّهُ","أَحَدٌ"],["ٱللَّهُ","ٱلصَّمَدُ"],["لَمْ","يَلِدْ","وَلَمْ","يُولَدْ"],["وَلَمْ","يَكُن","لَّهُۥ","كُفُوًا","أَحَدٌۢ"]];
+const HUSARY = (n) => `https://everyayah.com/data/Husary_64kbps/112${String(n).padStart(3, "0")}.mp3`;
+let curAudio = null;
+const LETTERS = [["ا","أَلِف"],["ب","بَاء"],["ت","تَاء"],["ث","ثَاء"],["ج","جِيم"],["ح","حَاء"]];
+const LCOL = ["#1F6F50","#1F6FB2","#D8237A","#C2720E","#6B4FB8","#0E8A8A"];
+
+const DEMO = {
+  quran(el) {
+    el.innerHTML = `
+      <div class="dctl">
+        <label>އާޔަތް <select id="qA">${IKHLAS.map((_, i) => `<option value="${i}">${i + 1}</option>`).join("")}</select></label>
+        <label>ސްޕީޑް <select id="qS"><option value="0.6">ވަރަށް ލަސް</option><option value="0.75" selected>ލަސް</option><option value="1">އާދައިގެ</option></select></label>
+        <label>ތަކުރާރު <select id="qR"><option>3</option><option selected>5</option><option>7</option></select></label>
+        <label><input type="checkbox" id="qAud" checked> 🔊 ޙުޞަރީގެ އަޑު</label>
+        <button class="dbtn p" id="qGo">▶ ފަށާ</button><button class="dbtn" id="qStop">■ ހުއްޓާ</button>
+      </div>
+      <div class="ayah" id="qAyah"></div>
+      <div class="dstat"><span id="qRep">ބުރު 0 / 5</span><span id="qMsg">ޓީޗަރު ކިޔަވަމުން ދާއިރު ބަސް ކުލަވާނެ – ދެން ކުއްޖާގެ ވަގުތު</span></div>
+      <div class="dbar"><i id="qBar"></i></div>
+      <p class="dnote">ކިޔެވުން: ޝައިޚް މަޙްމޫދު ޚަލީލް އަލްޙުޞަރީ (everyayah.com) – އިންޓަރނެޓް ބޭނުންވާނެ. އަޑު ނުލިބިއްޖެނަމަ: <a class="lk" href="https://quran.com/112" target="_blank" rel="noopener">${EXT}<span class="en">quran.com/112</span></a> – ޤާރީ: ޙުޞަރީ، ސްޕީޑް 0.75، ރިޕީޓް 5.</p>`;
+    const A = el.querySelector("#qAyah"), rep = el.querySelector("#qRep"), msg = el.querySelector("#qMsg"), bar = el.querySelector("#qBar");
+    const draw = () => { const a = IKHLAS[+el.querySelector("#qA").value]; A.innerHTML = a.map((w, i) => `<span class="w" data-i="${i}">${w}</span>`).join(" "); };
+    draw(); el.querySelector("#qA").onchange = () => { clearDemo(); draw(); };
+    el.querySelector("#qStop").onclick = () => { clearDemo(); draw(); rep.textContent = "ބުރު 0"; bar.style.width = "0"; };
+    el.querySelector("#qGo").onclick = () => {
+      clearDemo(); draw();
+      const words = [...A.querySelectorAll(".w")], rate = +el.querySelector("#qS").value, R = +el.querySelector("#qR").value;
+      const ai = +el.querySelector("#qA").value; let useAud = el.querySelector("#qAud").checked;
+      const sp = Math.round(700 / rate); let r = 0;
+      const lights = (dur) => { const step = dur / words.length; words.forEach((w, i) => later(() => { words.forEach((x) => x.classList.remove("on")); w.classList.add("on"); }, i * step)); };
+      const turn = (tot) => {
+        words.forEach((x) => x.classList.remove("on")); msg.textContent = "ދެން ކުއްޖާ – ފަހަތުން ކިޔާ!"; chime(520);
+        const t0 = Date.now();
+        const iv = setInterval(() => { const p = Math.min(1, (Date.now() - t0) / tot); bar.style.width = p * 100 + "%"; if (p >= 1) { clearInterval(iv); bar.style.width = "0"; if (r < R) round(); else { msg.textContent = "މޮޅު! ★ – " + R + " ފަހަރު ތަކުރާރުވެއްޖެ"; chime(880); } } }, 80); demoTimers.push(iv);
+      };
+      const timed = () => { lights(words.length * sp); later(() => turn(words.length * sp), words.length * sp + 300); };
+      const round = () => {
+        r++; rep.textContent = `ބުރު ${r} / ${R}`; msg.textContent = useAud ? "ޙުޞަރީ ކިޔަވަނީ – އަޑުއަހާ" : "އަޑުއަހާ – ބަސް ކުލަވަނީ";
+        if (!useAud) return timed();
+        const au = new Audio(HUSARY(ai + 1)); curAudio = au; au.playbackRate = rate; try { au.preservesPitch = true; } catch (e) {}
+        let started = false;
+        const fail = () => { if (started) return; useAud = false; el.querySelector("#qAud").checked = false; msg.textContent = "އަޑު ނުލިބުނު (އިންޓަރނެޓް / ސައިޓު) – އަޑު ނެތި ދަނީ"; later(timed, 1200); };
+        au.onerror = fail;
+        au.onplaying = () => { if (started) return; started = true; const d = (isFinite(au.duration) ? au.duration : 4) * 1000 / rate; lights(d * 0.92); };
+        au.onended = () => { const d = (isFinite(au.duration) ? au.duration : 4) * 1000 / rate; later(() => turn(Math.max(2500, d)), 250); };
+        au.play().catch(fail);
+      };
+      round();
+    };
+  },
+
+  ai(el) {
+    el.innerHTML = `
+      <p class="dnote">AI އެޕް (Tarteel) ކުއްޖާ ކިޔަވާއިރު ކުށް ފާހަގަކުރޭ. މި ޑެމޯގައި ޓީޗަރު އެ ކަންތައް ކުރާ ގޮތް: ކުއްޖާ ކިޔަވާއިރު ތަކުރާރުކުރަން ބޭނުންވާ ބަހަށް ފިތާލާ.</p>
+      <div class="ayah" id="aiAyah">${IKHLAS.map((a, k) => a.map((w, i) => `<span class="w tap" data-k="${k}-${i}">${w}</span>`).join(" ")).join(' <span class="sep">۝</span> ')}</div>
+      <div class="dctl"><button class="dbtn p" id="aiGo">ފާހަގަކުރި ބަސްތައް ތަކުރާރުކުރޭ</button><button class="dbtn" id="aiClr">ފުހެލާ</button><span id="aiMsg" class="dstat1"></span></div>`;
+    el.querySelectorAll(".tap").forEach((w) => w.onclick = () => w.classList.toggle("flag"));
+    el.querySelector("#aiClr").onclick = () => { clearDemo(); el.querySelectorAll(".tap").forEach((w) => w.classList.remove("flag", "on")); el.querySelector("#aiMsg").textContent = ""; };
+    el.querySelector("#aiGo").onclick = () => {
+      clearDemo(); const f = [...el.querySelectorAll(".flag")], m = el.querySelector("#aiMsg");
+      if (!f.length) { m.textContent = "ފުރަތަމަ ބަހަކަށް ފިތާލާ"; return; }
+      let t = 0; f.forEach((w) => { for (let k = 0; k < 3; k++) { later(() => { f.forEach((x) => x.classList.remove("on")); w.classList.add("on"); m.textContent = "ޓީޗަރު ކިޔާ → ކުއްޖާ ފަހަތުން ކިޔާ (" + (k + 1) + "/3)"; }, t); t += 1800; } });
+      later(() => { f.forEach((x) => x.classList.remove("on")); m.textContent = "ނިމުނީ – މަސައްކަތަށް ތަޢުރީފު ★"; chime(880); }, t);
+    };
+  },
+
+  letters(el) {
+    el.innerHTML = `
+      <div class="dctl">${LETTERS.map(([l], i) => `<button class="dbtn lt ${i ? "" : "on"}" data-i="${i}">${l}</button>`).join("")}<button class="dbtn" id="ltHear">🔊 އަޑު</button><button class="dbtn" id="ltClr">ފުހެލާ</button></div>
+      <div class="tracewrap"><canvas id="ltG"></canvas><canvas id="ltD"></canvas></div>
+      <p class="dnote">ފަނޑު އަކުރުގެ މަތިން އިނގިލިން / މައުސްއިން ލިޔޭ. ފުރިހަމަ ޤާޢިދާ ވެބްސައިޓް (ބަލާ، ފަހަތުން ކިޔާ، ލިޔޭ، ގޭމް): <a class="lk" href="${QAIDAH_URL}" target="_blank" rel="noopener">${EXT}<span>ޤާޢިދާ މަދަނިއްޔާ – ސެން</span></a></p>`;
+    const G = el.querySelector("#ltG"), D = el.querySelector("#ltD"), wrap = el.querySelector(".tracewrap"); let cur = 0;
+    const setup = () => { const sz = wrap.clientWidth; [G, D].forEach((c) => { c.width = sz * 2; c.height = sz * 2; }); const g = G.getContext("2d"); g.setTransform(2, 0, 0, 2, 0, 0); g.clearRect(0, 0, sz, sz); g.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--line"); g.font = `${sz * 0.62}px Amiri, "Traditional Arabic", serif`; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(LETTERS[cur][0], sz / 2, sz / 2 + sz * 0.04); const d = D.getContext("2d"); d.setTransform(2, 0, 0, 2, 0, 0); d.clearRect(0, 0, sz, sz); d.lineCap = "round"; d.lineJoin = "round"; d.lineWidth = Math.max(10, sz * 0.045); d.strokeStyle = LCOL[cur]; return { d, sz }; };
+    let ctx = setup(), drawing = false, last = null;
+    const pos = (e) => { const r = D.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+    D.onpointerdown = (e) => { drawing = true; last = pos(e); D.setPointerCapture(e.pointerId); };
+    D.onpointermove = (e) => { if (!drawing) return; const p = pos(e); ctx.d.beginPath(); ctx.d.moveTo(last.x, last.y); ctx.d.lineTo(p.x, p.y); ctx.d.stroke(); last = p; };
+    D.onpointerup = D.onpointercancel = () => { drawing = false; };
+    el.querySelectorAll(".lt").forEach((b) => b.onclick = () => { cur = +b.dataset.i; el.querySelectorAll(".lt").forEach((x) => x.classList.toggle("on", x === b)); ctx = setup(); sayAr(LETTERS[cur][1]); });
+    el.querySelector("#ltHear").onclick = () => sayAr(LETTERS[cur][1]);
+    el.querySelector("#ltClr").onclick = () => ctx.d.clearRect(0, 0, ctx.sz, ctx.sz);
+  },
+
+  tajweed(el) {
+    const M = (t) => `<span class="tj m">${t}</span>`, Gh = (t) => `<span class="tj g">${t}</span>`, Q = (t) => `<span class="tj q">${t}</span>`;
+    el.innerHTML = `
+      <div class="dctl"><button class="dbtn p" id="tjAll">ހުރިހާ ކުލައެއް</button><button class="dbtn" data-r="m"><i class="dot m"></i>މައްދު</button><button class="dbtn" data-r="g"><i class="dot g"></i>ޣުންނަ</button><button class="dbtn" data-r="q"><i class="dot q"></i>ޤަލްޤަލާ</button><button class="dbtn" id="tjOff">ކުލަ އޮފް</button></div>
+      <div class="ayah tjx" id="tjA">إِ${Gh("نَّ")}${M("آ")} أَعْطَيْنَ${M("ـٰ")}كَ ٱلْكَوْثَرَ <span class="sep">﴿١﴾</span> فَصَلِّ لِرَبِّكَ وَٱنْحَرْ <span class="sep">﴿٢﴾</span> إِ${Gh("نَّ")} شَ${M("ا")}نِئَكَ هُوَ ٱلْأَ${Q("بْ")}تَرُ <span class="sep">﴿٣﴾</span></div>
+      <p class="dnote">ސޫރަތުލް ކައުޘަރު. ކުލަ އޮފްކޮށްލާފައި އޮންކޮށްލާ – ތަފާތު ބައިވެރިންނަށް ފެންނާނެ. ކްލާހުގައި: އެއް ކުލައެއް އެއްފަހަރު، ފުރަތަމަ މައްދު.</p>`;
+    const A = el.querySelector("#tjA"), set = (mode) => { A.dataset.show = mode; el.querySelectorAll(".dctl .dbtn").forEach((b) => b.classList.toggle("p", (b.dataset.r || (b.id === "tjAll" ? "all" : b.id === "tjOff" ? "off" : "")) === mode)); };
+    set("all");
+    el.querySelector("#tjAll").onclick = () => set("all"); el.querySelector("#tjOff").onclick = () => set("off");
+    el.querySelectorAll("[data-r]").forEach((b) => b.onclick = () => set(b.dataset.r));
+  },
+
+  games(el) {
+    el.innerHTML = `
+      <div class="wheelrow">
+        <div class="wheelbox"><div class="pin"></div><canvas id="wh"></canvas></div>
+        <div class="wside">
+          <button class="dbtn p big" id="whGo">🎡 އަނބުރާ</button>
+          <div class="wres" id="whRes">؟</div>
+          <div id="whMsg" class="dstat1">ވީލް ހުއްޓޭ އަކުރު – ކުއްޖާ ބުނޭ</div>
+          <p class="dnote">ސެން މޯޑު: ޓައިމަރެއް ނެތް، ޕޮއިންޓެއް ނެތް، ބަލިވާ މީހަކު ނެތް. Wordwall ގައި ހަމަ މިގޮތަށް 2 މިނެޓުން ހެދޭ: <a class="lk" href="https://wordwall.net" target="_blank" rel="noopener">${EXT}<span class="en">wordwall.net</span></a></p>
+        </div>
+      </div>`;
+    const c = el.querySelector("#wh"), box = el.querySelector(".wheelbox"); const N = LETTERS.length; let ang = 0, spinning = false;
+    const draw = () => { const sz = box.clientWidth; c.width = sz * 2; c.height = sz * 2; const x = c.getContext("2d"); x.setTransform(2, 0, 0, 2, 0, 0); const r = sz / 2 - 4, cx = sz / 2, cy = sz / 2; for (let i = 0; i < N; i++) { const a0 = ang + i * 2 * Math.PI / N, a1 = a0 + 2 * Math.PI / N; x.beginPath(); x.moveTo(cx, cy); x.arc(cx, cy, r, a0, a1); x.closePath(); x.fillStyle = LCOL[i]; x.fill(); x.strokeStyle = "#fff"; x.lineWidth = 3; x.stroke(); x.save(); x.translate(cx, cy); x.rotate(a0 + Math.PI / N); x.fillStyle = "#fff"; x.font = `${sz * 0.13}px Amiri, serif`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(LETTERS[i][0], r * 0.65, 0); x.restore(); } x.beginPath(); x.arc(cx, cy, sz * 0.07, 0, 7); x.fillStyle = "#fff"; x.fill(); };
+    draw();
+    el.querySelector("#whGo").onclick = () => {
+      if (spinning) return; spinning = true; const res = el.querySelector("#whRes"); res.textContent = "…";
+      const target = Math.floor(Math.random() * N), seg = 2 * Math.PI / N;
+      // pointer at top (-PI/2): want centre of target segment at -PI/2
+      let goal = -Math.PI / 2 - (target * seg + seg / 2); goal -= Math.ceil((ang - goal) / (2 * Math.PI) + 4) * 2 * Math.PI * -1; while (goal < ang + 8 * Math.PI) goal += 2 * Math.PI;
+      const start = ang, t0 = performance.now(), dur = 3500;
+      const step = (t) => { const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3); ang = start + (goal - start) * e; draw(); if (p < 1) requestAnimationFrame(step); else { spinning = false; res.textContent = LETTERS[target][0]; res.style.color = LCOL[target]; sayAr(LETTERS[target][1]); chime(880); el.querySelector("#whMsg").textContent = "ކުއްޖާ ބުނޭ – ރަނގަޅުވިޔަސް ނުވިޔަސް: «މޮޅު! އަދި އެއްފަހަރު»"; } };
+      requestAnimationFrame(step);
+    };
+  },
+
+  video(el) {
+    const STEPS = [["ކުޑަ ބައެއް", "ވީޑިއޯ 20 ސިކުންތު ޖައްސާ", 20], ["ޕޯޒް – ފަހަތުން ކިޔުން", "ވީޑިއޯ ހުއްޓާ – ކުއްޖާ ތަކުރާރު", 8], ["ޙަރަކާތް", "އަލުން ޖައްސާ – އަތުގެ ޙަރަކާތް / އަތްޖެހުން", 20], ["ސުވާލު", "ވީޑިއޯ ނިންމާ – ކާޑު ދައްކާ: «މިއީ ކޮން އަކުރެއް؟»", 8]];
+    const CL = ["2–3 މިނެޓަށްވުރެ ދިގު ނޫން", "މިއުޒިކް ނެތް", "ލަސް، ސާފު ރާގު – އެއް ޤާރީ", "ސާދާ ސްކްރީން", "ކުއްޖާ ހުރި ހަރުފަތާ ގުޅޭ", "އިޝްތިހާރު ނެތް (ޑައުންލޯޑް / YouTube Kids)"];
+    el.innerHTML = `
+      <div class="vgrid">
+        <div>
+          <h4>ވީޑިއޯ ކޯޗް – 4 ފިޔަވަޅު</h4>
+          <div class="vsteps">${STEPS.map((s, i) => `<div class="vs" data-i="${i}"><span class="n">${i + 1}</span><div><b>${s[0]}</b><div class="dnote">${s[1]}</div></div><span class="vt en"></span></div>`).join("")}</div>
+          <div class="dctl"><button class="dbtn p" id="vGo">▶ ފަށާ</button><button class="dbtn" id="vRe">ރީސެޓް</button></div>
+          <p class="dnote">ވީޑިއޯ ވަކި ޓެބެއްގައި ހުޅުވާފައި، މި ކޯޗް ސްކްރީނުގައި ބަހައްޓާ – ކޮން ވަގުތަކު ޕޯޒްކުރަންވީކަން ފެންނާނެ. <a class="lk" href="https://www.youtube.com/results?search_query=Arabic+letters+sounds+for+kids" target="_blank" rel="noopener">${EXT}<span class="en">YouTube</span></a></p>
+        </div>
+        <div>
+          <h4>ވީޑިއޯ ހޮވާ ޗެކްލިސްޓު</h4>
+          ${CL.map((c, i) => `<label class="ck"><input type="checkbox" id="vc${i}"> ${c}</label>`).join("")}
+          <div class="dstat1" id="vScore">0 / ${CL.length}</div>
+        </div>
+      </div>`;
+    const rows = [...el.querySelectorAll(".vs")];
+    const reset = () => { clearDemo(); rows.forEach((r) => { r.classList.remove("on", "done"); r.querySelector(".vt").textContent = ""; }); };
+    el.querySelector("#vRe").onclick = reset;
+    el.querySelector("#vGo").onclick = () => {
+      reset(); let i = 0;
+      const run = () => { if (i >= STEPS.length) { chime(880); return; } const r = rows[i], s = STEPS[i]; r.classList.add("on"); chime(i % 2 ? 520 : 660); let left = s[2]; r.querySelector(".vt").textContent = left + "s";
+        const iv = setInterval(() => { left--; r.querySelector(".vt").textContent = left + "s"; if (left <= 0) { clearInterval(iv); r.classList.remove("on"); r.classList.add("done"); r.querySelector(".vt").textContent = "✓"; i++; run(); } }, 1000); demoTimers.push(iv); };
+      run();
+    };
+    const sc = () => { const n = el.querySelectorAll(".ck input:checked").length; const s = el.querySelector("#vScore"); s.textContent = `${n} / ${CL.length} – ` + (n >= 5 ? "ކަމުދާނެ ✓" : "އެހެން ވީޑިއޯއެއް ހޯދާ"); s.style.color = n >= 5 ? "var(--green)" : "var(--rose)"; };
+    el.querySelectorAll(".ck input").forEach((x) => x.onchange = sc);
+  },
+
+  assist(el) {
+    const AAC = [["ފާތިޙާ", "الفاتحة", "ޓީޗަރު ސޫރަތުލް ފާތިޙާ ކިޔަވައިދެނީ", "M3 5.5C5.5 4 8.5 4 12 6c3.5-2 6.5-2 9-.5V19c-2.5-1.5-5.5-1.5-9 .5-3.5-2-6.5-2-9-.5zM12 6v13.5"], ["އިޚްލާޞް", "الإخلاص", "ޓީޗަރު ސޫރަތުލް އިޚްލާޞް ކިޔަވައިދެނީ", "M3 5.5C5.5 4 8.5 4 12 6c3.5-2 6.5-2 9-.5V19c-2.5-1.5-5.5-1.5-9 .5-3.5-2-6.5-2-9-.5zM12 6v13.5"], ["އަދި އެއްފަހަރު", "", "ޓީޗަރު އަލުން ކިޔަވައިދެނީ", "M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"], ["ނިމުނީ", "", "ޤުރުއާން ގަޑި ނިންމާ – ކުއްޖާ ލޯބިވާ ކަމެއް", "M5 12.5l4.5 4.5L19 7.5"], ["އަޑު ބާރުކޮށް", "", "ޓީޗަރު އަޑު ބާރުކުރަނީ", "M4 9h4l5-4v14l-5-4H4zM16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"], ["އަޑު މަޑުކޮށް", "", "ޓީޗަރު އަޑު މަޑުކުރަނީ", "M4 9h4l5-4v14l-5-4H4zM17 10l4 4M21 10l-4 4"]];
+    el.innerHTML = `
+      <div class="vgrid">
+        <div>
+          <h4>AAC ބޯޑު – ކުއްޖާ ފިތާލާ</h4>
+          <div class="aac">${AAC.map((a, i) => `<button class="ab" data-i="${i}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${a[3]}"/></svg><b>${a[0]}</b>${a[1] ? `<span class="ar">${a[1]}</span>` : ""}</button>`).join("")}</div>
+          <div class="dstat1" id="aacMsg">ބަހުން ވާހަކަ ނުދައްކާ ކުއްޖާ ފިލާވަޅު ކޮންޓްރޯލްކުރަނީ</div>
+          <p class="dnote">ހިލޭ ޑިޖިޓަލް AAC: <a class="lk" href="https://www.cboard.io" target="_blank" rel="noopener">${EXT}<span class="en">cboard.io</span></a> · ޕްރިންޓު ބޯޑު: ޑޮކިއުމެންޓް 06</p>
+        </div>
+        <div>
+          <h4>ވިޝުއަލް ޓައިމަރ</h4>
+          <div class="vtimer"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" class="bg"/><circle cx="60" cy="60" r="50" class="fg" id="vtArc"/></svg><div class="vtt en" id="vtTxt">1:00</div></div>
+          <div class="dctl"><button class="dbtn" data-m="1">1 މިނެޓު</button><button class="dbtn" data-m="3">3</button><button class="dbtn" data-m="5">5</button><button class="dbtn p" id="vtGo">▶</button><button class="dbtn" id="vtRe">↺</button></div>
+          <p class="dnote">ރަތް ބައި ނިމުނީމާ ގަޑި ނިމުނީ – ކުއްޖާއަށް ފެންނަން ހުރުން.</p>
+        </div>
+      </div>`;
+    el.querySelectorAll(".ab").forEach((b) => b.onclick = () => { el.querySelectorAll(".ab").forEach((x) => x.classList.toggle("on", x === b)); const a = AAC[+b.dataset.i]; el.querySelector("#aacMsg").innerHTML = `<b>ކުއްޖާ: «${a[0]}»</b> → ${a[2]}`; chime(660); });
+    const arc = el.querySelector("#vtArc"), txt = el.querySelector("#vtTxt"), C = 2 * Math.PI * 50; arc.style.strokeDasharray = C;
+    let total = 60, left = 60, iv = null;
+    const show = () => { arc.style.strokeDashoffset = C * (1 - left / total); txt.textContent = Math.floor(left / 60) + ":" + String(left % 60).padStart(2, "0"); };
+    show();
+    el.querySelectorAll("[data-m]").forEach((b) => b.onclick = () => { clearInterval(iv); iv = null; total = left = +b.dataset.m * 60; show(); });
+    el.querySelector("#vtGo").onclick = () => { if (iv) { clearInterval(iv); iv = null; return; } iv = setInterval(() => { left = Math.max(0, left - 1); show(); if (!left) { clearInterval(iv); iv = null; chime(880); } }, 1000); demoTimers.push(iv); };
+    el.querySelector("#vtRe").onclick = () => { clearInterval(iv); iv = null; left = total; show(); };
+  },
+};
+
+
+// theme toggle (per viewer)
+const themeBtn = document.getElementById("themeBtn");
+let th = null; try { th = localStorage.getItem("senkit_theme"); } catch (e) {}
+if (th) document.documentElement.setAttribute("data-theme", th);
+themeBtn.onclick = () => { const cur = document.documentElement.getAttribute("data-theme"); const dark = cur ? cur === "dark" : matchMedia("(prefers-color-scheme: dark)").matches; const n = dark ? "light" : "dark"; document.documentElement.setAttribute("data-theme", n); try { localStorage.setItem("senkit_theme", n); } catch (e) {} };
+
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") home(); const n = parseInt(e.key, 10); if (n >= 1 && n <= CATS.length) open(n - 1); });
+
+const start = CATS.findIndex((c) => "#" + c.id === location.hash);
+start >= 0 ? open(start) : home();
+</script>
+
+</body>
+</html>
